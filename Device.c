@@ -110,7 +110,6 @@ void isCorrectObject(){
             pause();
             printf("test2\n");
             //alarm(2);
-            printf("test3\n");
         }
 }
 
@@ -156,19 +155,14 @@ double ultraSensor()
     pinMode(TRIG, OUTPUT);                               //trig, wiringPi GPIO 1번 = BCM GPIO 17번
     pinMode(ECHO, INPUT);                             //echo, wiringPi GPIO 0번 = BCM GPIO 18번
 
-    //printf("digitalWrite(TRIG, LOW);\n");
     digitalWrite(TRIG, LOW);                           //trig를 Low로 출력
     
-    //printf("digitalWrite(TRIG, HIGH);\n");
     digitalWrite(TRIG, HIGH);                          //trig를 High로 출력
     
-    //printf("delayMicroseconds(10);\n");
     delayMicroseconds(10);                             //10us 동안 delay
     
-    //printf("digitalWrite(TRIG, LOW);\n");
     digitalWrite(TRIG, LOW);
     
-    //printf("startTime = micros();\n");
     while(digitalRead(ECHO) == LOW){
         if(cnt>100000){
             //exit(1);
@@ -187,9 +181,10 @@ double ultraSensor()
     while (digitalRead(ECHO) == HIGH){
         if(cnt>1000000){
             printf("cnt! end\n");
+            
             ge_cnt++;
+            
             fprintf(fp,"%d# error endCnt %d:%d\n", ge_cnt, tm.tm_hour, tm.tm_min);
-            //exit(1);
             fclose(fp);
             return -1;
         }
@@ -585,6 +580,8 @@ int getStatusFromServer(){
         return SUCCESS;
 }
 
+
+//not use
 int compareTime(char* reservation){
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
@@ -634,9 +631,10 @@ int main(int argc, char **argv){
     int isCorrectCar;
     int isCorrectTime;
     
+    wiringPiSetup();                         //wiringPi 기준으로 PIN번호
+    
     while(1) {
 		//parking a Car
-		wiringPiSetup();                         //wiringPi 기준으로 PIN번호
         isCar = 0;
         
         //ultrasonicSanser
@@ -665,17 +663,6 @@ int main(int argc, char **argv){
             printf("incorrect car...\n");
             continue;
         }
-        
-        //isCorrectTime = compareTime(getReservedTimeFromServer());
-        //if(isCorrectTime){
-        //    printf("correct Time...!\n");
-        //}
-        //else{
-        //    printf("incorrect Time...\n");
-        //    continue;
-        //}
-		///////////////////////////////////////////////////////////////////////////////
-        //server get input Time() requested
         
 		while(isCar)
 			isOutCar();
