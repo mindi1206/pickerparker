@@ -20,34 +20,7 @@
 #include <wiringPi.h>
 #include <pthread.h>
 #include <math.h>
-#include "ibeaconAndroid.h"
-
-#define HEX_LENGTH  2
-
-#define FLAGS_AD_TYPE   0x01
-#define FLAGS_LIMITED_MODE_BIT  0x01
-#define FLAGS_GENERAL_MODE_BIT  0x02
-
-#define EIR_FLAGS           0x01
-#define EIR_UUID16_SOME     0x02
-#define EIR_UUID16_ALL      0x03
-#define EIR_UUID32_SOME     0x04
-#define EIR_UUID32_ALL      0x05
-#define EIR_UUID128_SOME    0x06
-#define EIR_UUID128_ALL     0x07
-#define EIR_NAME_SHORT      0x08
-#define EIR_NAME_COMPLETE   0x09
-#define EIR_TX_POWER        0x0A
-#define EIR_DEVICE_ID       0x10
-
-static volatile int signal_received = 0;
-static int g_isTimeout = 0;
-
-static int print_advertising_devices(int dd, uint8_t filter_type, uint8_t* uuidFromServer);
-static void sigint_handler(int sig);
-static int check_report_filter(uint8_t procedure, le_advertising_info* info);
-static int read_flags(uint8_t* flags, const uint8_t* data, size_t size);
-static void eir_parse_name(uint8_t* eir, size_t eir_len, char* buf, size_t buf_len);
+#include "peter_ibeacon_Android.h"
 
 static void sig_alrm_handler(int signo)
 {
