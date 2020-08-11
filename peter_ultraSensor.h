@@ -1,3 +1,4 @@
+#ifndef __PETER_ULTRASENSOR_H__
 #include <stdio.h>
 #include <stdlib.h>
 #include <wiringPi.h>
@@ -17,3 +18,5 @@ static int gs_cnt = 0, ge_cnt = 0;
 
 double ultraSensor();
 void isCorrectObject();
+
+#endif // !__PETER_ULTRASENSOR_H__
