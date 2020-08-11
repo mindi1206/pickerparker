@@ -149,13 +149,14 @@ void* t_sendPostRequest(void*);
 void sendGetRequest(CURL* curl, ResponseData* responseData);
 void concat_url(int idx, threadParam* tparam);
 
-// signal
+// 디바이스 검색 signal
 static void sig_alrm_handler(int signo)
 {
 	signal_received = signo;
 	g_isTimeout = 1; // global
 }
 
+//초음파 시그널
 void handler1()                                     //SIGNALHANDLER
 {
 	double num;
@@ -178,6 +179,7 @@ void handler1()                                     //SIGNALHANDLER
 	}
 }
 
+//일정거리에서 일정시간동안 유지 -> 차
 void isCorrectObject() {
 	double distance = ultraSensor();
 	if (distance > 20.0 && distance < 40.0)   //30.0cm < ultra < 50.0cm 일때
@@ -192,12 +194,14 @@ void isCorrectObject() {
 	}
 }
 
+//출차 감시
 void isOutCar() {
 	double distance = ultraSensor();
 	int i;
 
 	if (distance > 40.0) {
 
+		//출차하고 3초 후 출차 확신
 		for (i = 0; i < 3; i++) {
 			distance = ultraSensor();
 			delay(1000);
@@ -215,6 +219,7 @@ void isOutCar() {
 	}
 }
 
+//초음파를 이용하여 물체와 거리를 측정
 double ultraSensor()
 {
 	time_t t = time(NULL);
@@ -318,6 +323,7 @@ failed:
 	snprintf(buf, buf_len, "(unknow)");
 }
 
+//major 번호 = 0x0206 / minor 번호 = 0x0406 인 ibeacon만 검색 
 static int eir_parse_ibeacon_info(uint8_t* nearData, struct ibeacon_info* info)
 {
 	if (nearData[0] == 0x1A && nearData[1] == 0xff &&
@@ -405,6 +411,7 @@ static void sigint_handler(int sig)
 	signal_received = sig;
 }
 
+//주변 디바이스 검색 및 예약 정보와 비교
 static int print_advertising_devices(int dd, uint8_t filter_type, uint8_t* uuidFromServer)
 {
 	unsigned char buf[HCI_MAX_EVENT_SIZE], *ptr;
@@ -454,7 +461,7 @@ static int print_advertising_devices(int dd, uint8_t filter_type, uint8_t* uuidF
 	alarm(timeoutt);
 
 
-
+	//10초동안 기기검색 후 while문 탈출
 	while (!g_isTimeout)
 	{
 		evt_le_meta_event* meta;
@@ -467,6 +474,7 @@ static int print_advertising_devices(int dd, uint8_t filter_type, uint8_t* uuidF
 		timeout.tv_sec = 5;
 		timeout.tv_usec = 0;
 
+		//5초동안 read에 반응이 없으면 빠져나오고 새로 read
 		rv = select(dd + 1, &set, NULL, NULL, &timeout);
 
 		if (signal_received == SIGALRM)
@@ -494,6 +502,7 @@ static int print_advertising_devices(int dd, uint8_t filter_type, uint8_t* uuidF
 			goto done;
 		}
 
+		//10초가 지났을 때 행동
 		if (signal_received == SIGALRM) {
 			isRightCar = 0;
 			signal_received = 0;
@@ -512,6 +521,7 @@ static int print_advertising_devices(int dd, uint8_t filter_type, uint8_t* uuidF
 		/* ignoring multiple reports */
 		info = (le_advertising_info*)(meta->data + 1);
 
+		//검색에 성공했을 때 예약정보와 주변 uuid를 비교
 		if (check_report_filter(filter_type, info))
 		{
 			char name[30];
@@ -560,6 +570,11 @@ done:
 	return 0;
 }
 
+
+//ibeaconscanner
+// 예약정보와 주변 uuid를 비교한 결과를 반환
+// uuidFromServer -> 서버로부터 가져온 예약 정보(uuid)
+//return 1/0
 int ibeaconScanner(uint8_t* uuidFromServer) {
 	int dev_id, dd;
 
@@ -628,12 +643,15 @@ int ibeaconScanner(uint8_t* uuidFromServer) {
 	return isCorrectCar;
 }
 
+//임시 uuid 반환함수
 char* getUuidFromServer() {
 
 	//temp UUID
 	return "2f234454cf6d4a0fadf2f4911ba9ffa6";  //hex
 }
 
+
+//not use
 char* getReservedTimeFromServer() {
 	// ##test case
 	//"1400-1600"
@@ -646,6 +664,7 @@ char* getReservedTimeFromServer() {
 	return "1730-0130";
 }
 
+//임시 상태반환 함수
 int getStatusFromServer() {
 	/*
 	* SUCCESS: success store UUID
@@ -687,6 +706,7 @@ int compareTime(char* reservation) {
 }
 
 //char -> hex 
+//32자리 문자열 -> 16자리 hex
 void char2hex(char* uuid, uint8_t* num) {
 
 	int i, j;
@@ -752,100 +772,14 @@ int main(int argc, char** argv) {
 	info->addr[12] = info->end_min;
 	info->addr_length = 13;
 
-	/*
-	pthread_t t_id;
-	curl_global_init( CURL_GLOBAL_ALL );
-	int* status;
-
-	// Response 을 저장할 구조체 변수
-	ResponseData* responseData = (ResponseData*)malloc(sizeof(ResponseData));
-	memset(responseData, 0, sizeof(ResponseData));
-
-	CURL* curl = initialize(responseData);
-
-	// thread parameter initialize
-	threadParam* tParam = (threadParam*)malloc(sizeof(threadParam));
-	memset(tParam, 0, sizeof(threadParam));
-
-	tParam->responseData = responseData;
-	tParam->curl = curl;
-	concat_url(1, tParam);
-	printf("url: %s\n", tParam->url);
-	reservationInfo* info =(reservationInfo*)malloc(sizeof(reservationInfo));
-	memset(info, 0, sizeof(reservationInfo));
-
-	// initilaze
-	info->addr[0] = info->status;
-	info->addr[1] = info->id;
-	info->addr[2] = info->user_uuid;
-	info->addr[3] = info->start_year;
-	info->addr[4] = info->start_month;
-	info->addr[5] = info->start_day;
-	info->addr[6] = info->start_hour;
-	info->addr[7] = info->start_min;
-	info->addr[8] = info->end_year;
-	info->addr[9] = info->end_month;
-	info->addr[10] = info->end_day;
-	info->addr[11] = info->end_hour;
-	info->addr[12] = info->end_min;
-	info->addr_length = 13;
-
-	//printf("main\n");
-	//printf("curl address: %p\n", curl);
-	//printf("tparam curl address: %p\n", tParam->curl);
-	//printf("responsedata address: %p\n", responseData);
-	//printf("tparam responsedata address: %p\n", tParam->responseData);
-
-	if(curl != NULL) {
-	// Header  사용자 정의 HTTP 헤더: create a linked list and assign
-	//curl_slist* responseHeaders = NULL;
-	//responseHeaders = curl_slist_append( responseHeaders , "Expect: 100-continue" ) ;
-	//responseHeaders = curl_slist_append( responseHeaders , "User-Agent: Picker Parker" ) ;
-	//curl_easy_setopt( curl , CURLOPT_HTTPHEADER , responseHeaders ) ;
-
-
-	if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
-	perror("thread create error: ");
-	}
-	pthread_join(t_id, NULL);
-
-	//sendPostRequest(curl, responseData);
-	//sendGetRequest(curl, responseData);
-
-	//parsingData(responseData);
-	*status = parsingData2(responseData, info);
-
-	concat_url(2, tParam);
-
-
-	if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
-	perror("thread create error: ");
-	}
-	pthread_join(t_id, NULL);
-
-	concat_url(3, tParam);
-	if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
-	perror("thread create error: ");
-	}
-	pthread_join(t_id, NULL);
-
-	// cleanup
-	//curl_slist_free_all( responseHeaders ) ;
-
-	}
-	// free
-	curl_easy_cleanup(curl);
-	curl_global_cleanup();
-
-	free(responseData);
-
-
-	*/
+	
 	while (1) {
 		//parking a Car
+		//전역변수
 		isCar = 0;
 
 		//ultrasonicSansor
+		//기기 위에 차가 있는지 수시로 확인
 		while (!isCar)
 			isCorrectObject();
 
@@ -855,15 +789,19 @@ int main(int argc, char** argv) {
 		pthread_join(t_id, NULL);
 		int status = parsingData2(responseData, info);
 
-		switch (getStatusFromServer()) {
+		//SUCCESS: 제공자가 제공한 시간 내에 예약한 시간에 주차
+		//HOST: 제공자가 제공한 시간 외에 주차
+		//ERROR DEFAULT: 제공자가 제공한 시간 내에 예약하지 않은 시간에 주차
+		switch (status) {
 		case SUCCESS:
 			char2hex(info->user_uuid, uuidFromServer);
-			isCorrectCar = ibeaconScanner(uuidFromServer);
+			isCorrectCar = ibeaconScanner(uuidFromServer);		//제공자가 제공한 시간 내에 예약한 시간에 주차한 차의 UUID가 맞음 -> 1 / 틀림 -> 0
 			break;
 
 		case HOST:
 			isCorrectCar = 1;
 			break;
+
 		case ERROR:
 			isCorrectCar = 0;
 			break;
@@ -873,6 +811,8 @@ int main(int argc, char** argv) {
 			break;
 		}
 
+		//uuid가 맞으면 입차확인
+		//틀리면 다시 초음파부터 검색
 		if (isCorrectCar) {
 			printf("correct car...!!\n");
 			// in
@@ -887,8 +827,10 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
+		//출차가 될 때, while 탈출 
 		while (isCar)
 			isOutCar();
+		
 		// out
 		concat_url(3, tParam);
 		if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
