@@ -1,6 +1,7 @@
 #ifndef __PETER_HTTPREQUEST_H__
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <curl/curl.h>
 #include <pthread.h>
 
