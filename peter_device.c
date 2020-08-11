@@ -55,7 +55,8 @@
 // #define ERROR 2
 // #define FAIL 3
 
-
+/* peter_httprequest.h */
+/*
 enum {
 	ERROR_ARGS = 1,
 	ERROR_CURL_INIT = 2
@@ -70,30 +71,37 @@ enum {
 	FLAG_DEFAULT = 0
 };
 
+*/
 /* 서버 상태 리턴 값 */
+/*
 enum {
 	SUCCESS = 1,	// 예약 내역 존재 (사용자)
 	FAIL = 2,
 	ERROR = 3,		// 예약 내역 없음
 	HOST = 4		// 제공자
 };
-
+*/
+/* peter_httprequest.h */
 /* response */
-typedef struct ResponseData {
+/*typedef struct ResponseData {
 	long statCode;			// response state (ex: 200, 400, 404)
 	char* responseBody;		// responseBody
 	size_t size;			// data size
-}ResponseData;
+}ResponseData;*/
 
+/* peter_httprequest.h */
 /* 스레드 전달 파라미터 */
 /* main에서 할당한 ResponseData 와 CURL 주소 저장 */
+/*
 typedef struct threadParam {
 	ResponseData* responseData;	// responsedata ptr
 	CURL* curl;					// curl ptr
 	char url[150];			// 연결 주소	
 }threadParam;
-
+*/
+/* peter_httprequest.h */
 /* 예약 내역 */
+/*
 typedef struct reservationInfo {
 	char status[10];		// 상태
 	char id[3];				// 예약 번호
@@ -116,19 +124,20 @@ typedef struct reservationInfo {
 
 	int addr_length;		// addr 배열 크기
 }reservationInfo;
-
+*/
 static volatile int signal_received = 0;
 // http://blazingcode.asuscomm.com/api/check/1
 // http://blazingcode.asuscomm.com/api/check-in/1-4
 // http://blazingcode.asuscomm.com/api/check-out/1-4
 
-const char* deviceID = "1";					// 기기번호
+/* peter_httprequest.h */
+/*const char* deviceID = "1";					// 기기번호
 const char* path_check = "check/";			// 예약 확인 url
 const char* path_checkin = "check-in/";		// 입차 url
 const char* path_checkout = "check-out/";	// 출자 url
 const char* server = "http://blazingcode.asuscomm.com/api/"; // 서버 주소
-
 char check_parameter[30];	// 페크인 체크아웃 시 사용할 parameter
+*/
 
 double first_distance;
 double last_distance;
@@ -145,7 +154,8 @@ static void eir_parse_name(uint8_t* eir, size_t eir_len, char* buf, size_t buf_l
 double ultraSensor();
 void isCorrectObject();
 
-size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userp);	// curl_perform 함수 수행 시 responsebody를 저장하는 콜백 함수
+/* peter_httprequest.h */
+/*size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userp);	// curl_perform 함수 수행 시 responsebody를 저장하는 콜백 함수
 CURL* initialize(ResponseData* responseData);								// curl 초기화, curl 옵션 지정
 char* setPostData();														// post method 전송 데이터 생성				
 int parsingData(ResponseData* data, reservationInfo* info);					// responsebody 파싱
@@ -153,7 +163,7 @@ void sendPostRequest(CURL* curl, ResponseData* responseData);				// post method 
 void* t_sendPostRequest(void*);												// post method request function (thread)
 void sendGetRequest(CURL* curl, ResponseData* responseData);				// get method request fuction
 void concat_url(int idx, threadParam* tparam);								// url 생성
-
+*/
 
 // 디바이스 검색 signal
 static void sig_alrm_handler(int signo)
@@ -791,7 +801,7 @@ int main(int argc, char** argv) {
 		// 스레드가 끝날 때까지 main 종료 방지
 		pthread_join(t_id, NULL);
 		// responsebody parsing
-		int status = parsingData2(responseData, info);
+		int status = parsingData(responseData, info);
 
 		//SUCCESS: 제공자가 제공한 시간 내에 예약한 시간에 주차
 		//HOST: 제공자가 제공한 시간 외에 주차
@@ -860,6 +870,7 @@ int main(int argc, char** argv) {
 }
 
 /* url 생성 */
+/*
 void concat_url(int idx, threadParam* tparam) {
 	tparam->url[0] = '\0';
 
@@ -889,8 +900,9 @@ void concat_url(int idx, threadParam* tparam) {
 		break;
 	}
 }
-
+*/
 /* responsebody 파싱 */
+/*
 int parsingData(ResponseData* data, reservationInfo* info) {
 	char c;
 	char str[100000];
@@ -898,6 +910,7 @@ int parsingData(ResponseData* data, reservationInfo* info) {
 	int key_flag = 0, value_flag = 0;
 	int status;
 	printf("- - - RESPONSE DATA PARSING START - - -\n");
+	*/
 	/* reseponseBody contents..
 	{
 	"status": "success",
@@ -916,6 +929,7 @@ int parsingData(ResponseData* data, reservationInfo* info) {
 	}
 	}
 	*/
+/*
 	while (data->responseBody[idx] != '\0') {
 		c = data->responseBody[idx++];
 		if (c == '"') {
@@ -988,8 +1002,9 @@ int parsingData(ResponseData* data, reservationInfo* info) {
 		return ERROR;
 	}
 }
-
+*/
 /* callback func - save body content to memory */
+/*
 size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userp) {
 	size_t realsize = size * nmemb;
 	ResponseData* mem = (ResponseData*)userp;
@@ -1005,8 +1020,9 @@ size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userp) {
 
 	return size * nmemb;
 }
-
+*/
 /* curl 초기화, curl 옵션 지정 */
+/*
 CURL* initialize(ResponseData* responseData) {
 	// 초기화
 	CURL* curl = curl_easy_init();
@@ -1027,8 +1043,9 @@ CURL* initialize(ResponseData* responseData) {
 		exit(EXIT_FAILURE);
 	}
 }
-
+*/
 /* post method 전송 데이터 생성 */
+/*
 char* setPostData() {
 	const char* postParams[] = {
 		"user_id"      , "test" ,
@@ -1060,8 +1077,9 @@ char* setPostData() {
 	}
 	return buf;
 }
-
+*/
 /* post method request function (thread) */
+/*
 void* t_sendPostRequest(void* tParam) {
 	CURL* curl = ((threadParam*)tParam)->curl;
 	ResponseData* responseData = ((threadParam*)tParam)->responseData;
@@ -1074,11 +1092,12 @@ void* t_sendPostRequest(void* tParam) {
 	//threadParam* tParam = (threadParam*)tParam;
 	const char* url = "http://blazingcode.asuscomm.com/api/check/1";
 	printf("url: %s\n", ((threadParam*)tParam)->url);
-	curl_easy_setopt(curl, CURLOPT_URL, /*"http://blazingcode.asuscomm.com/api/check/1"*/ ((threadParam*)tParam)->url);
+	curl_easy_setopt(curl, CURLOPT_URL, ((threadParam*)tParam)->url);
+	
 	memset(responseData, 0, sizeof(ResponseData));
+	
 
-
-	char* postData/*=  setPostData()*/;
+	char* postData;
 	//printf("print post Data : %s\n", postData);
 	// do a standard HTTP POST op
 	// in theory, this is automatically set for us by setting
@@ -1088,6 +1107,7 @@ void* t_sendPostRequest(void* tParam) {
 	postData = NULL로 설정하면 안됨
 	밑 함수 두줄이 없으면 GET 방식으로 request하겠다와 같은 뜻
 	*/
+/*
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData);
 	curl_easy_setopt(curl, CURLOPT_POST, OPTION_TRUE);
 
@@ -1107,8 +1127,9 @@ void* t_sendPostRequest(void* tParam) {
 		}
 	}
 }
-
+*/
 /* post method request function */
+/*
 void sendPostRequest(CURL* curl, ResponseData* responseData) {
 	// 연결 대상 주소 설정
 	curl_easy_setopt(curl, CURLOPT_URL, "http://blazingcode.asuscomm.com/api/login");
@@ -1127,6 +1148,7 @@ void sendPostRequest(CURL* curl, ResponseData* responseData) {
 	postData = NULL로 설정하면 안됨
 	밑 함수 두줄이 없으면 GET 방식으로 request하겠다와 같은 뜻
 	*/
+/*
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData);
 	curl_easy_setopt(curl, CURLOPT_POST, OPTION_TRUE);
 
@@ -1147,8 +1169,9 @@ void sendPostRequest(CURL* curl, ResponseData* responseData) {
 		printf("data: %s\n", responseData->responseBody);
 	}
 }
+*/
 /* get method request function */
-void sendGetRequest(CURL* curl, ResponseData* responseData) {
+/*void sendGetRequest(CURL* curl, ResponseData* responseData) {
 	// 연결 대상 주소 설정
 	curl_easy_setopt(curl, CURLOPT_URL, "http://blazingcode.asuscomm.com/api/parking-lot/40-120-30-130");
 	curl_easy_setopt(curl, CURLOPT_POST, OPTION_FALSE);
@@ -1171,6 +1194,7 @@ void sendGetRequest(CURL* curl, ResponseData* responseData) {
 		printf("body: %s\n", responseData->responseBody);
 	}
 }
+*/
 /*void setresponseHeader(){
 curl_slist* responseHeaders = NULL;
 responseHeaders = curl_slist_append( responseHeaders , "Expect: 100-continue" ) ;
