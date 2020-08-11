@@ -46,9 +46,12 @@
 #define EIR_TX_POWER        0x0A
 #define EIR_DEVICE_ID       0x10
 
+/*
+다연다연다연
 #define TRIG 0
 #define ECHO 1
 #define LED1 2
+*/
 
 // #define SUCCESS 0
 // #define HOST 1
@@ -130,10 +133,13 @@ const char* server = "http://blazingcode.asuscomm.com/api/"; // 서버 주소
 
 char check_parameter[30];	// 페크인 체크아웃 시 사용할 parameter
 
+int g_isTimeout = 0;
+/*
+다연다연다연
 double first_distance;
 double last_distance;
 int isCar;
-int g_isTimeout = 0;
+*/
 
 int gs_cnt = 0, ge_cnt = 0;
 
@@ -142,8 +148,12 @@ static void sigint_handler(int sig);
 static int check_report_filter(uint8_t procedure, le_advertising_info* info);
 static int read_flags(uint8_t* flags, const uint8_t* data, size_t size);
 static void eir_parse_name(uint8_t* eir, size_t eir_len, char* buf, size_t buf_len);
+
+/*
+다연다연다연
 double ultraSensor();
 void isCorrectObject();
+*/
 
 size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userp);	// curl_perform 함수 수행 시 responsebody를 저장하는 콜백 함수
 CURL* initialize(ResponseData* responseData);								// curl 초기화, curl 옵션 지정
@@ -162,6 +172,8 @@ static void sig_alrm_handler(int signo)
 	g_isTimeout = 1; // global
 }
 
+/*
+다연다연다연
 //초음파 시그알람핸들러
 void handler1()
 {
@@ -286,6 +298,7 @@ double ultraSensor()
 	fclose(fp);
 	return distance;
 }
+*/
 
 static void eir_parse_name(uint8_t* eir, size_t eir_len, char* buf, size_t buf_len)
 {
