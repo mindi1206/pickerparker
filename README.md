@@ -5,10 +5,9 @@
 ## 2. Setup
 * 개발환경
 </br>
-
+    
     OS: raspbain GNU/Linux (debian strecth 9)
     extern library: curl, wiringPi, bluetooth
-
 
 * curl library install
 </br>
@@ -63,10 +62,12 @@
         - device를 실행하는 main routine
 
     2. peter_ibeacon_scanner.c, peter_ibeacon_Android.h
-        - 기기 주변에 잡히는 beacon을 ~~
+        - beacon 스캔 (phone)
+        - 서버에서 가져온 예약 uuid와  기기 주변에 잡히는 ibeacon (major=0x0206, minor=0x0406)을 비교하여 1 또는 0을 반환
     
     3. peter_ultraSensor.c, peter_ultraSensor.h
-        - 초음파 센서를 사용하여~~~
+        - 초음파 센서, LED 동작 정의
+        - 
 
     4. peter_httprequest.c, peter_httprequest.h
         - http 프로토콜, POST request 사용하여 서버와 통신 
