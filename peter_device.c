@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 	/*민지 선언*/
 	pthread_t t_id;
 	curl_global_init(CURL_GLOBAL_ALL);
-	int* status;
+
 
 	wiringPiSetup();							//wiringPi 기준으로 PIN번호
 	pinMode(RED, OUTPUT);
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
 		//int temp;
 		
 		while (!isCar){			
-			greeOn();
+			greenOn();
 			buzzerOff();
 			isCorrectObject();
 		}
@@ -154,14 +154,16 @@ int main(int argc, char** argv) {
 		}
 		else {
 			printf("incorrect car...\n");
-			if (status == ERROR || status == FAIL) {
-				while (isCar)
-					isOutCar();
-			}
+			printf("-----------CAR IN----------\n");
+			redOn();
+			buzzerOn();
+			while (isCar)
+				isOutCar();
 			continue;
 		}
 
 		//출차가 될 때, while 탈출 
+		printf("-----------CAR IN----------\n");
 		while (isCar)
 			isOutCar();
 		

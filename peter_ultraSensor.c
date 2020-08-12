@@ -27,9 +27,7 @@ void isCorrectObject() {
 		first_distance = distance;				//거리 조건 내에 값이 반환되면 first_distance에 저장
 		signal(SIGALRM, handler1);
 		alarm(2);								//SIGALRM이용, 일정 시간 후에 함수 호출
-		printf("test1\n");
 		pause();
-		printf("test2\n");
 		}
 }
 	
@@ -37,7 +35,7 @@ void isCorrectObject() {
 void isOutCar() {
 	double distance = ultraSensor();
 	int i;
-
+	
 	if (!(distance < 40.0 && distance > 20.0)) {
 
 		//출차하고 3초 후 출차 확신
@@ -46,7 +44,7 @@ void isOutCar() {
 			delay(1000);
 
 			if (distance < 40.0 && distance > 20.0) {
-				printf("-----------CAR IN----------\n");
+				//printf("-----------CAR IN----------\n");
 				return;
 			}
 		}
@@ -54,7 +52,7 @@ void isOutCar() {
 		printf("---------------------------------------------\n-----CAR OUT-----\n------------------------------------------------\n");
 	}
 	else {
-		printf("-----------CAR IN------------\n");
+		//printf("-----------CAR IN------------\n");
 	}
 }
 
@@ -128,8 +126,8 @@ void greenOn() {
 
 void blueOn() {
 	digitalWrite(RED, LOW);
-	digitalWrite(GREEN, HIGH);
-	digitalWrite(BLUE, LOW);
+	digitalWrite(GREEN, LOW);
+	digitalWrite(BLUE, HIGH);
 }
 
 void buzzerOn() {
