@@ -67,7 +67,7 @@
     
     3. peter_ultraSensor.c, peter_ultraSensor.h
         - 초음파 센서, LED 동작 정의
-        - 
+        - 초음파 센서를 이용하여 일정거리 내에 일정시간 동안 물체가 감지되면 이때의 플래그를 이용하여 비콘 스캐너 동작 시작 및 서버 통신 수행
 
     4. peter_httprequest.c, peter_httprequest.h
         - http 프로토콜, POST request 사용하여 서버와 통신 
