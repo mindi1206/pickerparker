@@ -20,7 +20,7 @@
 #include <wiringPi.h>
 #include <pthread.h>
 #include <math.h>
-#include "peter_ibeacon_Android.h"
+#include "peter_ibeacon_scanner.h"
 
 static void sig_alrm_handler(int signo)
 {

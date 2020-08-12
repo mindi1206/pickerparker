@@ -20,7 +20,7 @@
 #include <wiringPi.h>
 #include <pthread.h>
 #include <math.h>
-#include "peter_ibeacon_Android.h"
+#include "peter_ibeacon_scanner.h"
 //#include "peter_ibeacon_scanner.c"
 #include "peter_httprequest.h"
 //#include "peter_httprequest.c"
