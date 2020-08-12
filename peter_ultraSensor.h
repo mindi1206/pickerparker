@@ -9,9 +9,12 @@
 #include <unistd.h>
 #include <signal.h>
 
-#define TRIG 0
-#define ECHO 1
-#define LED1 2
+#define RED 0
+#define GREEN 1
+#define BLUE 2
+#define TRIG 3
+#define ECHO 4
+#define BUZZER 5
 
 static double first_distance;
 static double last_distance;
@@ -22,4 +25,10 @@ static int gs_cnt = 0, ge_cnt = 0;
 double ultraSensor();
 void isCorrectObject();
 void isOutCar();
+void redOn();
+void greenOn();
+void blueOn();
+void buzzerOn();
+void buzzerOff();
+
 #endif // !__PETER_ULTRASENSOR_H__

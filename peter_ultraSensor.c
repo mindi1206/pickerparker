@@ -1,28 +1,21 @@
 #include "peter_ultraSensor.h"
 
-
-
 //초음파 시그알람핸들러
-void handler1()
-{
+void handler1() {
 	double num;
 	last_distance = ultraSensor();				//2초 후에 반환된 거리를 last_distance에 저장
 	num = fabs(last_distance - first_distance); //(last_distance - first_distance)절대값
 
 	printf("first_distance = %.2f cm, last_distance = %.2f cm\n", first_distance, last_distance);
 
-	//절대값이 해당 값보다 작으면 일치하다고 인식, LED 점등(테스터용)
+	//절대값이 해당 값보다 작으면 일치하다고 인식
 	if ((num) <= 4.0) {
 		printf("num : %.2f\n------------!!YES!!------------\n", num);
-		pinMode(LED1, OUTPUT);
-		digitalWrite(LED1, HIGH);
-		delay(20);
 		isCar = 1;
 	}
-	//절대값이 해당 값보다 크면 불일치하다고 인식, LED 소등(테스터용)
+	//절대값이 해당 값보다 크면 불일치하다고 인식
 	else {
 		printf("num : %.2f\n------------!!NO!!------------\n", num);
-		digitalWrite(LED1, LOW); delay(20);
 		isCar = 0;
 	}
 }
@@ -30,19 +23,16 @@ void handler1()
 //일정거리에서 일정시간동안 유지 -> 차
 void isCorrectObject() {
 	double distance = ultraSensor();
-	if (distance > 20.0 && distance < 40.0)		//20.0cm < ultra < 40.0cm 일때
-	{
+	if (distance > 20.0 && distance < 40.0)	{	//20.0cm < ultra < 40.0cm 일때
 		first_distance = distance;				//거리 조건 내에 값이 반환되면 first_distance에 저장
 		signal(SIGALRM, handler1);
 		alarm(2);								//SIGALRM이용, 일정 시간 후에 함수 호출
 		printf("test1\n");
 		pause();
 		printf("test2\n");
-		
-		//alarm(2);
-	}
+		}
 }
-
+	
 //출차 감지
 void isOutCar() {
 	double distance = ultraSensor();
@@ -69,8 +59,7 @@ void isOutCar() {
 }
 
 //초음파를 이용하여 물체와 거리를 측정
-double ultraSensor()
-{
+double ultraSensor() {
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 	unsigned long startTime, endTime;					//Echo에서 초음파를 송, 수신하는 시간저장
@@ -84,9 +73,6 @@ double ultraSensor()
 		printf("FILE OPEN ERROR! \n");
 		exit(0);
 	}
-
-	pinMode(TRIG, OUTPUT);                              //trig, wiringPi GPIO 0번 = BCM GPIO 17번
-	pinMode(ECHO, INPUT);								//echo, wiringPi GPIO 1번 = BCM GPIO 18번
 
 	digitalWrite(TRIG, LOW);							//trig를 Low로 출력
 	digitalWrite(TRIG, HIGH);							//trig를 High로 출력
@@ -126,4 +112,30 @@ double ultraSensor()
 	delay(50);
 	fclose(fp);
 	return distance;
+}
+
+void redOn() {
+	digitalWrite(RED, HIGH);
+	digitalWrite(GREEN, LOW);
+	digitalWrite(BLUE, LOW);
+}
+
+void greenOn() {
+	digitalWrite(RED, LOW);
+	digitalWrite(GREEN, HIGH);
+	digitalWrite(BLUE, LOW);
+}
+
+void blueOn() {
+	digitalWrite(RED, LOW);
+	digitalWrite(GREEN, HIGH);
+	digitalWrite(BLUE, LOW);
+}
+
+void buzzerOn() {
+	digitalWrite(BUZZER, HIGH);
+}
+
+void buzzerOff() {
+	digitalWrite(BUZZER, LOW);
 }

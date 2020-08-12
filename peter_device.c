@@ -39,7 +39,14 @@ int main(int argc, char** argv) {
 	curl_global_init(CURL_GLOBAL_ALL);
 	int* status;
 
-	wiringPiSetup();                         //wiringPi 기준으로 PIN번호
+	wiringPiSetup();							//wiringPi 기준으로 PIN번호
+	pinMode(RED, OUTPUT);
+	pinMode(GREEN, OUTPUT);
+	pinMode(BLUE, OUTPUT);
+	pinMode(TRIG, OUTPUT);
+	pinMode(ECHO, INPUT);
+	pinMode(BUZZER, OUTPUT);
+
 	// Response 을 저장할 구조체 변수  
 	ResponseData* responseData = (ResponseData*)malloc(sizeof(ResponseData));
 	memset(responseData, 0, sizeof(ResponseData));
@@ -86,12 +93,12 @@ int main(int argc, char** argv) {
 		//기기 위에 차가 있는지 수시로 확인
 		//int temp;
 		
-		while (!isCar){				
+		while (!isCar){			
+			greeOn();
+			buzzerOff();
 			isCorrectObject();
 		}
 			
-			
-
 		if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
 			perror("thread create error: ");
 		}
@@ -108,18 +115,26 @@ int main(int argc, char** argv) {
 		case SUCCESS:
 			char2hex(info->user_uuid, uuidFromServer);
 			isCorrectCar = ibeaconScanner(uuidFromServer);		//제공자가 제공한 시간 내에 예약한 시간에 주차한 차의 UUID가 맞음 -> 1 / 틀림 -> 0
+			blueOn();
+			buzzerOff();
 			break;
 			// 제공자
 		case HOST:
 			isCorrectCar = 1;
+			blueOn();
+			buzzerOff();
 			break;
 			// 예약 내역 없음
 		case ERROR:
 			isCorrectCar = 0;
+			redOn();
+			buzzerOn();
 			break;
 
 		default:
 			isCorrectCar = 0;
+			redOn();
+			buzzerOn();
 			break;
 		}
 
@@ -139,6 +154,10 @@ int main(int argc, char** argv) {
 		}
 		else {
 			printf("incorrect car...\n");
+			if (status == ERROR || status == FAIL) {
+				while (isCar)
+					isOutCar();
+			}
 			continue;
 		}
 
