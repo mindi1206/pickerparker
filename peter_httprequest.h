@@ -1,4 +1,7 @@
 #ifndef __PETER_HTTPREQUEST_H__
+#define __PETER_HTTPREQUEST_H__
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,12 +30,6 @@ enum {
 	HOST = 4		// 제공자
 };
 
-const char* deviceID = "1";					// 기기번호
-const char* path_check = "check/";			// 예약 확인 url
-const char* path_checkin = "check-in/";		// 입차 url
-const char* path_checkout = "check-out/";	// 출자 url
-const char* server = "http://blazingcode.asuscomm.com/api/"; // 서버 주소
-char check_parameter[30];	// 페크인 체크아웃 시 사용할 parameter
 
 /* response */
 typedef struct ResponseData {
@@ -72,6 +69,7 @@ typedef struct reservationInfo {
 
 	int addr_length;		// addr 배열 크기
 }reservationInfo;
+
 
 size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userp);	// curl_perform 함수 수행 시 responsebody를 저장하는 콜백 함수
 CURL* initialize(ResponseData* responseData);								// curl 초기화, curl 옵션 지정

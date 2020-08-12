@@ -15,12 +15,11 @@
 
 static double first_distance;
 static double last_distance;
-static int isCar;
+/*static*/ int isCar;
+static int test = 4;
 static int gs_cnt = 0, ge_cnt = 0;
 
 double ultraSensor();
 void isCorrectObject();
 void isOutCar();
-void handler1();
-
 #endif // !__PETER_ULTRASENSOR_H__

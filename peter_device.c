@@ -21,9 +21,13 @@
 #include <pthread.h>
 #include <math.h>
 #include "peter_ibeacon_Android.h"
-#include "peter_ibeacon_scanner.c"
+//#include "peter_ibeacon_scanner.c"
 #include "peter_httprequest.h"
+//#include "peter_httprequest.c"
 #include "peter_ultraSensor.h"
+//#include "peter_ultraSensor.c"
+
+extern int isCar;
 
 int main(int argc, char** argv) {
 	uint8_t uuidFromServer[IBEACON_UUID_L];
@@ -80,8 +84,13 @@ int main(int argc, char** argv) {
 
 		//ultrasonicSansor
 		//기기 위에 차가 있는지 수시로 확인
-		while (!isCar)
+		//int temp;
+		
+		while (!isCar){				
 			isCorrectObject();
+		}
+			
+			
 
 		if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
 			perror("thread create error: ");
@@ -89,7 +98,7 @@ int main(int argc, char** argv) {
 		// 스레드가 끝날 때까지 main 종료 방지
 		pthread_join(t_id, NULL);
 		// responsebody parsing
-		int status = parsingData2(responseData, info);
+		int status = parsingData(responseData, info);
 
 		//SUCCESS: 제공자가 제공한 시간 내에 예약한 시간에 주차
 		//HOST: 제공자가 제공한 시간 외에 주차

@@ -68,7 +68,8 @@ static void sigint_handler(int sig);
 static int check_report_filter(uint8_t procedure, le_advertising_info* info);
 static int read_flags(uint8_t* flags, const uint8_t* data, size_t size);
 static void eir_parse_name(uint8_t* eir, size_t eir_len, char* buf, size_t buf_len);
-
+void char2hex(char* uuid, uint8_t* num);
+int ibeaconScanner(uint8_t* uuidFromServer);
 
 
 

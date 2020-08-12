@@ -1,4 +1,12 @@
-#include "peter_httprequset.h"
+
+#include "peter_httprequest.h"
+
+const char* deviceID = "1";					// 기기번호
+const char* path_check = "check/";			// 예약 확인 url
+const char* path_checkin = "check-in/";		// 입차 url
+const char* path_checkout = "check-out/";	// 출자 url
+const char* server = "http://blazingcode.asuscomm.com/api/"; // 서버 주소
+char check_parameter[30];	// 페크인 체크아웃 시 사용할 parameter
 
 /* url 생성 */
 void concat_url(int idx, threadParam* tparam) {

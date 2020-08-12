@@ -1,4 +1,6 @@
-#include "Peter_ultraSensor.h"
+#include "peter_ultraSensor.h"
+
+
 
 //초음파 시그알람핸들러
 void handler1()
@@ -36,6 +38,7 @@ void isCorrectObject() {
 		printf("test1\n");
 		pause();
 		printf("test2\n");
+		
 		//alarm(2);
 	}
 }
