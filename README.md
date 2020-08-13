@@ -1,3 +1,4 @@
+
 # 2020 현장실습 주차공간 공유 플랫폼 picker-parker device
 
 ## 1. Introduction
@@ -74,6 +75,10 @@
         - 예약 내역 받아 parsing
         - 입차, 출차 시간 전송
 
+## contributers
+김민지 @mindi1206
+이다연 @dayoni
+박민국 @qkralsrnr206
 
 
 
