@@ -55,8 +55,6 @@
 </br>
 
 ## 4. Structure
-1. 구성
-
 </br>
 
     1. peter_device.c
