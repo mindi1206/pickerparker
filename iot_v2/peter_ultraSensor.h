@@ -33,7 +33,7 @@ void blueOn();
 void buzzerOn();
 void buzzerOff();
 
-void enterParkingZoen();
+void enterParkingZone();
 void blockOff();
 void setGuardLine();
 

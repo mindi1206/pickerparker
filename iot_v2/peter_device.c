@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
 			
 			greenOn();
 			//UP guidline
-			enterParkingZoen();
+			enterParkingZone();
 
 			// check-in url »ý¼º		
 //			concat_url(2, tParam);
@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
 		while (isCar)
 			isOutCar();
 		
-		//Down Guidline
+		//Down Guardline
 		redOn();
 		delay(3000);
 		blockOff();

@@ -139,8 +139,8 @@ void buzzerOff() {
 }
 
 //up: falling edge
-void enterParkingZoen() {
-	printf("enter Parking Zoen\n");
+void enterParkingZone() {
+	printf("enter Parking Zone\n");
 	digitalWrite(DOWN, LOW);
 	digitalWrite(UP, LOW);
 }
@@ -154,7 +154,7 @@ void blockOff() {
 
 void setGuardLine(){
 	printf("set Guard Line\n");
-	enterParkingZoen();
+	enterParkingZone();
 	delay(5000);
 	blockOff();
 	delay(5000);
