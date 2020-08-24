@@ -1,7 +1,7 @@
 
 #include "peter_httprequest.h"
 
-const char* deviceID = "1";					// 기기번호
+const char* deviceID = "NOU7440";					// 기기번호
 const char* path_check = "check/";			// 예약 확인 url
 const char* path_checkin = "check-in/";		// 입차 url
 const char* path_checkout = "check-out/";	// 출자 url

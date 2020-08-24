@@ -33,8 +33,8 @@ int main(int argc, char** argv) {
 
 
 	/*민지 선언*/
-//	pthread_t t_id;
-//	curl_global_init(CURL_GLOBAL_ALL);
+	pthread_t t_id;
+	curl_global_init(CURL_GLOBAL_ALL);
 
 
 	wiringPiSetup();							//wiringPi 기준으로 PIN번호
@@ -50,46 +50,47 @@ int main(int argc, char** argv) {
 	
 	
 	// Response 을 저장할 구조체 변수  
-//	ResponseData* responseData = (ResponseData*)malloc(sizeof(ResponseData));
-//	memset(responseData, 0, sizeof(ResponseData));
+	ResponseData* responseData = (ResponseData*)malloc(sizeof(ResponseData));
+	memset(responseData, 0, sizeof(ResponseData));
 
 	// curl 초기화
-//	CURL* curl = initialize(responseData);
+	CURL* curl = initialize(responseData);
 
 	// thread parameter initialize
-//	threadParam* tParam = (threadParam*)malloc(sizeof(threadParam));
-//	memset(tParam, 0, sizeof(threadParam));
+	threadParam* tParam = (threadParam*)malloc(sizeof(threadParam));
+	memset(tParam, 0, sizeof(threadParam));
 
 	// main 변수의 포인터를 thread parameter 가 가리키도록 저장
-//	tParam->responseData = responseData;
-//	tParam->curl = curl;
+	tParam->responseData = responseData;
+	tParam->curl = curl;
 
 	// 예약 내역 요청 url 생성
-//	concat_url(1, tParam);
-//	reservationInfo* info = (reservationInfo*)malloc(sizeof(reservationInfo));
-//	memset(info, 0, sizeof(reservationInfo));
+	concat_url(1, tParam);
+	reservationInfo* info = (reservationInfo*)malloc(sizeof(reservationInfo));
+	memset(info, 0, sizeof(reservationInfo));
 
 	// initilaze
-//	info->addr[0] = info->status;
-//	info->addr[1] = info->id;
-//	info->addr[2] = info->user_uuid;
-//	info->addr[3] = info->start_year;
-//	info->addr[4] = info->start_month;
-//	info->addr[5] = info->start_day;
-//	info->addr[6] = info->start_hour;
-//	info->addr[7] = info->start_min;
-//	info->addr[8] = info->end_year;
-//	info->addr[9] = info->end_month;
-//	info->addr[10] = info->end_day;
-//	info->addr[11] = info->end_hour;
-//	info->addr[12] = info->end_min;
-//	info->addr[13] = NULL;
-//	info->addr_length = 14;
+	info->addr[0] = info->status;
+	info->addr[1] = info->id;
+	info->addr[2] = info->user_uuid;
+	info->addr[3] = info->start_year;
+	info->addr[4] = info->start_month;
+	info->addr[5] = info->start_day;
+	info->addr[6] = info->start_hour;
+	info->addr[7] = info->start_min;
+	info->addr[8] = info->end_year;
+	info->addr[9] = info->end_month;
+	info->addr[10] = info->end_day;
+	info->addr[11] = info->end_hour;
+	info->addr[12] = info->end_min;
+	info->addr[13] = NULL;
+	info->addr_length = 14;
 
 	//set Line delay 10sec...
 	setGuardLine();
 	
 	while (1) {
+		
 		isCar = 0;
 
 		while (!isCar){			
@@ -97,16 +98,17 @@ int main(int argc, char** argv) {
 			buzzerOff();
 			isCorrectObject();
 		}
+		concat_url(1, tParam);
 			
-//		if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
-//			perror("thread create error: ");
-//		}
+		if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
+			perror("thread create error: ");
+		}
 		// 스레드가 끝날 때까지 main 종료 방지
-//		pthread_join(t_id, NULL);
+		pthread_join(t_id, NULL);
 		// responsebody parsing
 		
-		//int status = parsingData(responseData, info);
-		int status = SUCCESS;
+		int status = parsingData(responseData, info);
+		//int status = SUCCESS;
 		
 		//SUCCESS: 제공자가 제공한 시간 내에 예약한 시간에 주차
 		//HOST: 제공자가 제공한 시간 외에 주차
@@ -114,8 +116,8 @@ int main(int argc, char** argv) {
 		switch (status) {
 			// 예약내역 있음 (사용자)
 		case SUCCESS:
-			//char2hex(info->user_uuid, uuidFromServer);
-			char2hex(getUuidFromServer(), uuidFromServer);
+			char2hex(info->user_uuid, uuidFromServer);
+			//char2hex(getUuidFromServer(), uuidFromServer);
 			isCorrectCar = ibeaconScanner(uuidFromServer);		//제공자가 제공한 시간 내에 예약한 시간에 주차한 차의 UUID가 맞음 -> 1 / 틀림 -> 0
 			//blueOn();
 			buzzerOff();
@@ -150,13 +152,13 @@ int main(int argc, char** argv) {
 			enterParkingZone();
 
 			// check-in url 생성		
-//			concat_url(2, tParam);
+			concat_url(2, tParam);
 			// 입차내역 등록
-//			if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
-//				perror("thread create error: ");
-//			}
+			if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
+				perror("thread create error: ");
+			}
 			// 스레드가 끝날 때까지 main 종료 방지
-//			pthread_join(t_id, NULL);
+			pthread_join(t_id, NULL);
 		}
 		else {
 			printf("incorrect car...\n");
@@ -175,26 +177,26 @@ int main(int argc, char** argv) {
 		
 		//Down Guardline
 		redOn();
-		delay(3000);
+		delay(2000);
 		blockOff();
 		
 		// check-out url 생성
-//		concat_url(3, tParam);
+		concat_url(3, tParam);
 		// 출차 내역 등록
-//		if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
-//			perror("thread create error: ");
-//		}
+		if (pthread_create(&t_id, NULL, t_sendPostRequest, (void*)tParam) < 0) {
+			perror("thread create error: ");
+		}
 		// 스레드가 끝날 때까지 main 종료 방지
-//		pthread_join(t_id, NULL);
+		pthread_join(t_id, NULL);
 
 		//server get output time() requested
 	}
 	
 	// 해제
-//	curl_easy_cleanup(curl);
-//	curl_global_cleanup();
+	curl_easy_cleanup(curl);
+	curl_global_cleanup();
 
-//	free(responseData);
+	free(responseData);
 
 }
 
