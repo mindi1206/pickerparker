@@ -62,8 +62,6 @@ int main(int argc, char** argv) {
 	tParam->responseData = responseData;
 	tParam->curl = curl;
 
-	// 예약 내역 요청 url 생성
-	concat_url(1, tParam);
 	reservationInfo* info = (reservationInfo*)malloc(sizeof(reservationInfo));
 	memset(info, 0, sizeof(reservationInfo));
 
@@ -81,10 +79,13 @@ int main(int argc, char** argv) {
 	info->addr[10] = info->end_day;
 	info->addr[11] = info->end_hour;
 	info->addr[12] = info->end_min;
-	info->addr_length = 13;
+	info->addr[13] = NULL;
+	info->addr_length = 14;
 
-	
 	while (1) {
+		// 예약 내역 요청 url 생성
+		concat_url(1, tParam);
+		
 		//parking a Car
 		//전역변수
 		isCar = 0;

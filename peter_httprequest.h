@@ -64,7 +64,7 @@ typedef struct reservationInfo {
 	char end_hour[3];		// 시
 	char end_min[3];		// 분
 
-	char* addr[13];			// 구조체 내부 변수 주소 저장
+	char* addr[14];			// 구조체 내부 변수 주소 저장
 							// addr[0] = status;
 
 	int addr_length;		// addr 배열 크기
